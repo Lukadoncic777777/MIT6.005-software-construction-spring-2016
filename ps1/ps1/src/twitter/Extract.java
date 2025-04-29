@@ -3,8 +3,11 @@
  */
 package twitter;
 
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Extract consists of methods that extract information from a list of tweets.
@@ -24,7 +27,38 @@ public class Extract {
      *         every tweet in the list.
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Instant begintime=tweets.get(0).getTimestamp(),endtime=tweets.get(0).getTimestamp();
+        for(int i=1;i<tweets.size();i++)
+        {
+            Instant now=tweets.get(i).getTimestamp();
+            if(begintime.isAfter(now))
+            {
+                begintime=now;
+            }
+            if(endtime.isBefore(now))
+            {
+                endtime=now;
+            }
+        }
+        return (new Timespan(begintime,endtime));
+//        throw new RuntimeException("not implemented");
+    }
+    public static boolean is_legal_char(char ch)
+    {
+        /*
+        检查字符是否合法
+         */
+        if(ch>='A'&&ch<='Z')return true;
+        if(ch>='a'&&ch<='z')return true;
+        if(ch>='0'&&ch<='9')return true;
+        if(ch=='_'||ch=='-')return true;
+        return false;
+    }
+    public static char translate(char ch)
+    {
+        //将大写转换为小写字母
+        if(ch>='A'&&ch<='Z')return (char)(ch-'A'+'a');
+        return ch;
     }
 
     /**
@@ -41,9 +75,36 @@ public class Extract {
      *         contain a mention of the username mit.
      *         Twitter usernames are case-insensitive, and the returned set may
      *         include a username at most once.
-     */
+     **/
+
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Set<String> res= new TreeSet<>();
+        for(int i=0;i<tweets.size();i++)
+        {
+//            System.out.println();
+            String text=tweets.get(i).getText();
+            char[] textarray=new char[1005];
+            textarray=text.toCharArray();
+            for(int j=0;j<textarray.length;j++)
+            {
+                if(textarray[j]=='@'&&(j==0||is_legal_char(textarray[j-1])==false))
+                {
+                    int ed=j+1;
+                    while(ed<textarray.length&&is_legal_char(textarray[ed])==true) {
+                        ed++;
+                    }
+                    String NewUserName="";
+                    for(int k=j+1;k<ed;k++)
+                    {
+                        NewUserName+=translate(textarray[k]);
+                    }
+                    res.add(NewUserName);
+                    j=ed-1;
+                }
+            }
+        }
+        return res;
+//        throw new RuntimeException("not implemented");
     }
 
 }

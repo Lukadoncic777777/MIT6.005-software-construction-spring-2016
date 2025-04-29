@@ -5,6 +5,7 @@ package twitter;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,14 +30,16 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> writtenBy(List<Tweet> tweets, String username) {
-        List<Tweet> res=new ArrayList<>();
+        List<Tweet> writtenTweets = new ArrayList<>();
+        // check the tweets for username and add to result
         for (Tweet tweet : tweets) {
-            if (username.equals(tweet.getAuthor())) {
-                res.add(tweet);
+            String tweetAuthor = tweet.getAuthor();
+            
+            if (tweetAuthor.equalsIgnoreCase(username)) {
+                writtenTweets.add(tweet);
             }
         }
-        return res;
-//        throw new RuntimeException("not implemented");
+        return writtenTweets;
     }
 
     /**
@@ -50,16 +53,18 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
-        List<Tweet> res=new ArrayList<>();
-        Instant bgn=timespan.getStart(),ed=timespan.getEnd();
-        for (Tweet now : tweets) {
-            if(now.getTimestamp().isAfter(bgn) && now.getTimestamp().isBefore(ed))
-            {
-                res.add(now);
+        List<Tweet> tweetsInTimespan = new ArrayList<>();
+        
+        for (Tweet tweet : tweets) {
+            Instant timestamp = tweet.getTimestamp();
+            // if timespan start >= tweet timestamp >= timespan end
+            // add tweet to result
+            if ((timestamp.isAfter(timespan.getStart()) || timestamp.equals(timespan.getStart()))  &&      
+                (timestamp.isBefore(timespan.getEnd()) || timestamp.equals(timespan.getEnd()))) {       
+                tweetsInTimespan.add(tweet);
             }
         }
-        return res;
-//        throw new RuntimeException("not implemented");
+        return tweetsInTimespan;
     }
 
     /**
@@ -78,36 +83,21 @@ public class Filter {
      *         same order as in the input list.
      */
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
-        /*
-        先将所有 word 转换为小写，再将 tweets 转换为小写进行判断，最后将其原文塞入res中来返回
-         */
-        List<String> translated_word=new ArrayList<>();
-        List<Tweet> res=new ArrayList<>();
-        for(String word: words)
-        {
-            String now="";
-            for(int i=0;i<word.length();i++)
-            {
-                now+=Extract.translate(word.charAt(i));
-            }
-            translated_word.add(now);
-        }
-        for(Tweet now:tweets)
-        {
-            String nowText=now.getText(),translatedNowText="";
-            for(int i=0;i<nowText.length();i++)
-            {
-                translatedNowText+=Extract.translate(nowText.charAt(i));
-            }
-            for(String nowWord:translated_word) {
-                if (translatedNowText.contains(nowWord)) {
-                    res.add(now);
+        List<Tweet> tweetList = new ArrayList<>();
+        
+        for (Tweet tweet : tweets) {
+            // split the tweet text into a list of words
+            String text = tweet.getText().toLowerCase().replaceAll("[^\\w\\s]", "");   
+            List<String> textList = new ArrayList<>(Arrays.asList(text.split(" ")));   
+            // if word is in the tweet text, add to result
+            for (String word : words) {
+                if (textList.contains(word.toLowerCase())) {
+                    tweetList.add(tweet);
                     break;
                 }
             }
         }
-        return res;
-//        throw new RuntimeException("not implemented");
+        return tweetList;
     }
 
 }

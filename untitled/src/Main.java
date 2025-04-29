@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public enum PenColor {
         BLACK, GRAY, RED, PINK, ORANGE,
@@ -5,9 +8,12 @@ public class Main {
     }
     public static void main(String[] args) {
 
-        System.out.println("Hello world!");
-        int[] a=new int[100];
-        a[1]= PenColor.BLUE.ordinal();
-        System.out.println(a[1]);
+        List<String> a = new ArrayList<>();
+        a.add("cat");
+        List<String> b = a;
+        b.add("dog");
+        System.out.println(a);
+        System.out.println(b);
+
     }
 }

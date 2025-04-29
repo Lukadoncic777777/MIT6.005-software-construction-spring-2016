@@ -3,9 +3,7 @@
  */
 package twitter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * SocialNetwork provides methods that operate on a social network.
@@ -24,7 +22,15 @@ import java.util.Set;
  * private methods or classes if you like.
  */
 public class SocialNetwork {
-
+    public static String translate_users(String username)
+    {
+        String res="";
+        for(int i=0;i<username.length();i++)
+        {
+            res+=Extract.translate(username.charAt(i));
+        }
+        return res;
+    }
     /**
      * Guess who might follow whom, from evidence found in tweets.
      * 
@@ -41,7 +47,25 @@ public class SocialNetwork {
      *         either authors or @-mentions in the list of tweets.
      */
     public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Map<String,Set<String>> res=new TreeMap<>();
+        Set<String> empty=new TreeSet<>();
+        for(Tweet tweet : tweets)
+        {
+            Set<String> Atname=Extract.getMentionedUsers(Arrays.asList(tweet));
+            if(Atname.size()!=0)
+            {
+                String nowuser=translate_users(tweet.getAuthor());
+                Set<String> tmp= res.getOrDefault(nowuser,empty);
+                for(String name :Atname)
+                {
+                    name=translate_users(name);
+                    if(!name.equals(nowuser))tmp.add(name);
+                }
+                res.put(nowuser,tmp);
+            }
+        }
+        return res;
+//        throw new RuntimeException("not implemented");
     }
 
     /**
@@ -54,7 +78,67 @@ public class SocialNetwork {
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
+        List<String> res=new ArrayList<>();
+        Map<Integer,List<String> > mp=new TreeMap<>();
+        mp.clear();
+        Map<String, Set<String>> allusers_followsGraph=followsGraph;
+        final List<String> emptyList=new ArrayList<>();
+        Map<String,Integer> fans=new TreeMap<>();
+        emptyList.clear();
+        final Set<String> emptySet=new TreeSet<>();
+        emptyList.clear();
+        for(String nowuser:followsGraph.keySet())
+        {
+            Set<String> nowinfluencer=followsGraph.get(nowuser);
+            for(String name:nowinfluencer)
+            {
+                int nowsize=followsGraph.getOrDefault(name,emptySet).size();
+                if(nowsize==0){
+                    allusers_followsGraph.put(name,emptySet);
+                }
+            }
+        }
+        for(String nowuser:allusers_followsGraph.keySet())
+        {
+            fans.put(nowuser,0);
+        }
+        for(String nowuser:allusers_followsGraph.keySet())
+        {
+//            fans.put(nowuser,allusers_followsGraph.get(nowuser).size());
+            Set<String> Atname=allusers_followsGraph.get(nowuser);
+            for(String name:Atname) {
+                int now = fans.getOrDefault(name, 0);
+                fans.put(name, now + 1);
+            }
+        }
+        List<String> tmp0=mp.getOrDefault(-1,emptyList);
+//        System.out.println("*****"+tmp0);
+        for(String nowuser:fans.keySet())
+        {
+//            System.out.println("input!:"+nowuser);
+            int now=fans.get(nowuser);
+            List<String> tmp=new ArrayList<>(mp.getOrDefault(-now,emptyList));
+//            System.out.println("now="+now+"contain?"+mp.containsKey(-now)+"emptyList="+emptyList);
+//            System.out.println("$$$$"+nowuser+" "+(-now)+" "+tmp);
+            tmp.add(nowuser);
+//            System.out.println("!!!!"+nowuser+" "+(-now)+" "+tmp);
+            mp.put(-now,tmp);
+        }
+        for(Integer outdegree:mp.keySet())
+        {
+            List<String> now=mp.get(outdegree);
+            for(String name:now)
+            {
+//                System.out.println("now="+now+" name="+name+" outdegree="+outdegree);
+                res.add(name);
+            }
+        }
+        for(String name:res)
+        {
+            System.out.println(name);
+        }
+        return res;
+//        throw new RuntimeException("not implemented");
     }
 
 }

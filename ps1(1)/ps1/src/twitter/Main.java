@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static twitter.TweetReader.readTweetsFromWeb;
-
 /**
  * This is the main program.
  * 
@@ -24,8 +22,8 @@ public class Main {
      * within the last hour. This server may take up to a minute to respond, if
      * it has to refresh its cached sample of tweets.
      */
-    public static final URL SAMPLE_SERVER = makeURLAssertWellFormatted("https://courses.csail.mit.edu/6.005/ps1_tweets/tweets.json");
-
+    public static final URL SAMPLE_SERVER = makeURLAssertWellFormatted("http://courses.csail.mit.edu/6.005/ps1_tweets/tweets.json");
+    
     private static URL makeURLAssertWellFormatted(String urlString) {
         try {
             return new URL(urlString);
@@ -48,11 +46,7 @@ public class Main {
         
         final List<Tweet> tweets;
         try {
-            tweets = readTweetsFromWeb(SAMPLE_SERVER);
-//            for(int i=0;i<tweets.size();i++)
-//            {
-//                System.out.println(tweets.get(i).getText());
-//            }
+            tweets = TweetReader.readTweetsFromWeb(SAMPLE_SERVER);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }

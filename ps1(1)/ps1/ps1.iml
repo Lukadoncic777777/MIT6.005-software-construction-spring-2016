@@ -27,7 +27,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library name="javax.json-1.0.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/javax.json-1.0.jar!/" />
