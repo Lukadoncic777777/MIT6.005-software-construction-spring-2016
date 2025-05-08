@@ -34,5 +34,6 @@ public class GraphStaticTest {
     }
     
     // TODO test other vertex label types in Problem 3.2
-    
+
+
 }

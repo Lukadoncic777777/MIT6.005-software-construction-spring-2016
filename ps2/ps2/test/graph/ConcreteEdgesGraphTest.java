@@ -30,9 +30,28 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
     
     // Testing strategy for ConcreteEdgesGraph.toString()
     //   TODO
-    
+    @Test
+    public void testgraph()
+    {
+        ConcreteEdgesGraph graph=new ConcreteEdgesGraph();
+        graph.add("shabi");
+        graph.set("shao0320","jiangwuyao",2039);
+        graph.set("shao0320","jiangwuyao",3721);
+        graph.set("jiangwuyao","jiangchu",111);
+        graph.set("jiangwuyao","xiedi",1023);
+        graph.set("shao0320","xiedi",2039);
+        graph.remove("jiangwuyao");
+        System.out.println(graph.toString());
+    }
+
     // TODO tests for ConcreteEdgesGraph.toString()
-    
+    @Test
+    public void testEdges()
+    {
+        Edge edge=new Edge("shao0320","jiangniuyao",2039);
+        System.out.println(edge.toString());
+    }
+
     /*
      * Testing Edge...
      */

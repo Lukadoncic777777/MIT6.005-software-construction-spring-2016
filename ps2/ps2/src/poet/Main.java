@@ -20,7 +20,7 @@ public class Main {
      * @throws IOException if a poet corpus file cannot be found or read
      */
     public static void main(String[] args) throws IOException {
-        final GraphPoet nimoy = new GraphPoet(new File("src/poet/mugar-omni-theater.txt"));
+        final GraphPoet nimoy = new GraphPoet(new File("D:\\text\\MIT6.005\\MIT6.005-software-construction-spring-2016\\ps2\\ps2\\src\\poet\\mugar-omni-theater.txt"));
         final String input = "Test the system.";
         System.out.println(input + "\n>>>\n" + nimoy.poem(input));
     }

@@ -23,7 +23,18 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
     @Override public Graph<String> emptyInstance() {
         return new ConcreteVerticesGraph();
     }
-    
+
+    @Test public void testgraph(){
+        ConcreteVerticesGraph<String> graph= new ConcreteVerticesGraph<String>();
+        graph.add("shabi");
+        graph.set("shao0320","jiangwuyao",2039);
+        graph.set("shao0320","jiangwuyao",3721);
+        graph.set("jiangwuyao","jiangchu",111);
+        graph.set("jiangwuyao","xiedi",1023);
+        graph.set("shao0320","xiedi",2039);
+        graph.remove("jiangwuyao");
+        System.out.println(graph.toString());
+    }
     /*
      * Testing ConcreteVerticesGraph...
      */
